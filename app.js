@@ -10,36 +10,44 @@ app.post('/api/download', async (req, res) => {
   const { url } = req.body;
   if (!url) return res.status(400).json({ error: 'No URL provided' });
 
-  try {
-    const videoId = getVideoId(url);
-    if (!videoId) return res.status(400).json({ error: 'Invalid YouTube URL' });
+  let apiUrl = '', host = '';
+  if (url.includes('youtu')) {
+    apiUrl = 'https://youtube-video-playlist-downloader.p.rapidapi.com/video';
+    host = 'youtube-video-playlist-downloader.p.rapidapi.com';
+  } else {
+    apiUrl = 'https://socialscrapper.p.rapidapi.com/instagram-reels';
+    host = 'socialscrapper.p.rapidapi.com';
+  }
 
-    const response = await axios.get('https://youtube-media-downloader.p.rapidapi.com/v2/video/details', {
-      params: { videoId },
+  try {
+    const resp = await axios.get(apiUrl, {
+      params: { url },
       headers: {
         'X-RapidAPI-Key': '724d5be177msh828fd729dc94243p1400bdjsn515513776b76',
-        'X-RapidAPI-Host': 'youtube-media-downloader.p.rapidapi.com'
+        'X-RapidAPI-Host': host
       }
     });
+    const data = resp.data;
 
-    const data = response.data;
-    res.json({
-      title: data.title,
-      thumbnail: data.thumbnail,
-      hd: data.video.url
-    });
-
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Failed to fetch video' });
+    if (url.includes('youtu')) {
+      return res.json({
+        title: data.title,
+        thumbnail: data.thumbnail,
+        formats: data.formats // array of {quality, url}
+      });
+    } else {
+      // Instagram response contains video link
+      return res.json({
+        title: data.owner.username,
+        thumbnail: data.thumbnail,
+        hd: data.video_hd,
+        sd: data.video_sd || data.video_hd
+      });
+    }
+  } catch (e) {
+    console.error(e.message);
+    return res.status(500).json({ error: 'Failed to fetch video' });
   }
 });
 
-function getVideoId(url) {
-  const match = url.match(/(?:v=|\/)([a-zA-Z0-9_-]{11})(?:&|$)/);
-  return match ? match[1] : '';
-}
-
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Server running...');
-});
+app.listen(process.env.PORT || 3000, () => console.log('Server running...'));
