@@ -1,12 +1,24 @@
 {
   "name": "allinonedownloader-backend",
   "version": "1.0.0",
+  "description": "Backend API for All In One Downloader",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5"
-  }
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "keywords": [
+    "video",
+    "downloader",
+    "youtube",
+    "api",
+    "instagram",
+    "facebook"
+  ],
+  "author": "Debarag Das",
+  "license": "MIT"
 }
