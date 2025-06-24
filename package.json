@@ -1,17 +1,16 @@
 {
   "name": "allinonedownloader-backend",
   "version": "1.0.0",
-  "description": "Backend API for All In One Downloader using RapidAPI",
+  "description": "Backend API for All In One Downloader using All Media Downloader API",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
   "keywords": [
-    "video",
     "downloader",
     "youtube",
     "instagram",
-    "facebook",
+    "video",
     "api"
   ],
   "author": "Debarag Das",
