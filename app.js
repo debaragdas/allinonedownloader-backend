@@ -11,15 +11,19 @@ app.post('/api/download', async (req, res) => {
   if (!url) return res.status(400).json({ error: 'No URL provided' });
 
   try {
-    const response = await axios.get('https://all-media-downloader4.p.rapidapi.com/yt/v2.1.3/video.php', {
+    const response = await axios.get('https://yt-downloader13.p.rapidapi.com/yt/download', {
       params: { url },
       headers: {
         'X-RapidAPI-Key': '724d5be177msh828fd729dc94243p1400bdjsn515513776b76',
-        'X-RapidAPI-Host': 'all-media-downloader4.p.rapidapi.com'
+        'X-RapidAPI-Host': 'yt-downloader13.p.rapidapi.com'
       }
     });
 
-    res.json(response.data); // returns everything from API directly
+    res.json({
+      title: response.data.title,
+      thumbnail: response.data.thumbnail,
+      links: response.data.links // array of {url, type, quality}
+    });
 
   } catch (error) {
     console.error('API error:', error.message);
@@ -27,7 +31,6 @@ app.post('/api/download', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(process.env.PORT || 3000, () => {
+  console.log('Server running...');
 });
