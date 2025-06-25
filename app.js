@@ -22,15 +22,14 @@ app.post('/api/download', async (req, res) => {
     res.json({
       title: response.data.title,
       thumbnail: response.data.thumbnail,
-      links: response.data.links // array of {url, type, quality}
+      links: response.data.links
     });
 
   } catch (error) {
-    console.error('API error:', error.message);
-    res.status(500).json({ error: 'Failed to fetch video' });
+    console.error("❌ RapidAPI error:", error.response?.data || error.message);
+    res.status(500).json({ error: 'Failed to fetch video', details: error.response?.data || error.message });
   }
 });
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Server running...');
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log('🚀 Server running on port', PORT));
